@@ -8,6 +8,6 @@ namespace Identity.Extensions
 	{
 		public static Result ToApplicationResult(this IdentityResult result) => result.Succeeded
 			? Result.CreateSuccess()
-			: Result.CreateFailure(result.Errors.Select(e => e.Description));
+			: Result.CreateFailure(result.Errors.Select(e => e.Description).ToArray());
 	}
 }
