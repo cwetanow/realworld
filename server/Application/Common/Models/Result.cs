@@ -16,6 +16,6 @@ namespace Application.Common.Models
 
 		public static Result CreateSuccess() => new Result(true);
 
-		public static Result CreateFailure(IEnumerable<string> errors = null) => new Result(false, errors);
+		public static Result CreateFailure(params string[] errors) => new Result(false, errors);
 	}
 }
