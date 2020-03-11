@@ -20,12 +20,15 @@ namespace API.Controllers
 		}
 
 		[HttpPost]
-		public async Task<UserWithProfileDto> RegisterUser([FromBody] UserRequest<RegisterUserCommand> request) => await mediator.Send(request.User);
+		public async Task<UserWithProfileDto> RegisterUser([FromBody] UserRequest<RegisterUserCommand> request) => await ExecuteCommandAndReturnUserWithToken(request.User);
 
 		[HttpPost("login")]
-		public async Task<UserWithProfileDto> AuthenticateUser([FromBody] UserRequest<AuthenticateUserCommand> request)
+		public async Task<UserWithProfileDto> AuthenticateUser([FromBody] UserRequest<AuthenticateUserCommand> request) => await ExecuteCommandAndReturnUserWithToken(request.User);
+
+		private async Task<UserWithProfileDto> ExecuteCommandAndReturnUserWithToken<TCommand>(TCommand command)
+			where TCommand : IRequest<UserWithProfileDto>
 		{
-			var dto = await mediator.Send(request.User);
+			var dto = await mediator.Send(command);
 
 			dto.Token = tokenService.CreateToken(dto.Email);
 
