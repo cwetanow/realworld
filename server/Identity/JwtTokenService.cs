@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Identity.Configuration;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Identity
@@ -38,20 +39,53 @@ namespace Identity
 			var expires = DateTime.UtcNow.AddHours(configuration.ValidHours);
 
 			var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.SecretKey));
-			var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-			var token = new JwtSecurityToken(
-				configuration.Issuer,
-				configuration.Audience,
-				claims,
-				expires: expires,
-				signingCredentials: credentials
-			);
+			var tokenDescriptor = new SecurityTokenDescriptor {
+				Subject = new ClaimsIdentity(claims),
+				Expires = expires,
+				SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature),
+				Issuer = configuration.Issuer,
+				Audience = configuration.Audience
+			};
 
-			var tokenString = new JwtSecurityTokenHandler()
-				.WriteToken(token);
+			var handler = new JwtSecurityTokenHandler();
 
-			return tokenString;
+			var token = handler.CreateToken(tokenDescriptor);
+
+			return handler.WriteToken(token);
+		}
+
+		public AuthenticateResult ValidateToken(string token, string scheme)
+		{
+			var keyByteArray = Encoding.UTF8.GetBytes(configuration.SecretKey);
+			var signingKey = new SymmetricSecurityKey(keyByteArray);
+
+			var tokenValidationParameters = new TokenValidationParameters {
+				ValidateIssuerSigningKey = true,
+				IssuerSigningKey = signingKey,
+				ValidIssuer = configuration.Issuer,
+				ValidAudience = configuration.Audience,
+				ValidateLifetime = true,
+				ClockSkew = TimeSpan.Zero
+			};
+
+			try
+			{
+				var handler = new JwtSecurityTokenHandler();
+
+				handler.ValidateToken(token, tokenValidationParameters, out _);
+				var secutiryToken = handler.ReadJwtToken(token);
+
+				var identity = new ClaimsIdentity(secutiryToken.Claims, scheme);
+				var principal = new ClaimsPrincipal(identity);
+				var ticket = new AuthenticationTicket(principal, scheme);
+
+				return AuthenticateResult.Success(ticket);
+			}
+			catch
+			{
+				return AuthenticateResult.Fail("Invalid token");
+			}
 		}
 	}
 }
