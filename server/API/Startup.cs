@@ -1,15 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Application.Common.Extensions;
+using Identity.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Persistence;
+using Persistence.Extensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace API
 {
@@ -26,6 +26,17 @@ namespace API
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddControllers();
+
+			services
+				.AddMvcCore(opts => {
+					opts.OutputFormatters.Add(new HttpNoContentOutputFormatter());
+					opts.Filters.Add(new ProducesAttribute("application/json"));
+				});
+
+			services
+				.AddPersistence(options => options.UseNpgsql(Configuration.GetConnectionString(typeof(ConduitDbContext).Name)))
+				.AddIdentity(options => options.UseNpgsql(Configuration.GetConnectionString("IdentityDbContext")))
+				.AddApplication();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
