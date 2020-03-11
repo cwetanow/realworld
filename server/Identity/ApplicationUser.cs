@@ -4,7 +4,9 @@ namespace Identity
 {
 	public class ApplicationUser : IdentityUser
 	{
-		public ApplicationUser(string username, string email)
+		private ApplicationUser() { }
+
+		public ApplicationUser(string username, string email) 
 			: base(username)
 		{
 			this.Email = email;
