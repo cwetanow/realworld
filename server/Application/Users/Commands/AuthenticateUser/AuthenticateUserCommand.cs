@@ -30,7 +30,12 @@ namespace Application.Users.Commands.AuthenticateUser
 
 			public async Task<UserWithProfileDto> Handle(AuthenticateUserCommand request, CancellationToken cancellationToken)
 			{
-				var token = await userService.Authenticate(request.Email, request.Password);
+				var result = await userService.Authenticate(request.Email, request.Password);
+
+				if (!result.Success)
+				{
+					throw new BadRequestException();
+				}
 
 				var userProfile = await context.Set<UserProfile>()
 					.AsNoTracking()
@@ -41,10 +46,7 @@ namespace Application.Users.Commands.AuthenticateUser
 					throw new EntityNotFoundException<UserProfile>(request.Email);
 				}
 
-				var dto = mapper.Map<UserWithProfileDto>(userProfile);
-				dto.Token = token;
-
-				return dto;
+				return mapper.Map<UserWithProfileDto>(userProfile);
 			}
 		}
 	}

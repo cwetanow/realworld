@@ -7,6 +7,6 @@ namespace Application.Common.Interfaces
 	{
 		Task<(Result result, string userId)> CreateUser(string username, string email, string password);
 
-		Task<string> Authenticate(string email, string password);
+		Task<Result> Authenticate(string email, string password);
 	}
 }
