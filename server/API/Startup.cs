@@ -1,8 +1,10 @@
+using API.Infrastructure.Extensions;
 using Application.Common.Extensions;
 using Identity.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,12 +28,16 @@ namespace API
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddControllers();
-
 			services
 				.AddMvcCore(opts => {
 					opts.OutputFormatters.Add(new HttpNoContentOutputFormatter());
 					opts.Filters.Add(new ProducesAttribute("application/json"));
+					opts.Filters.Add(new AuthorizeFilter("default"));
 				});
+
+			services
+				.ConfigureConduitJwtAuthentication()
+				.ConfigureAuthorization();
 
 			services
 				.AddPersistence(options => options.UseNpgsql(Configuration.GetConnectionString(typeof(ConduitDbContext).Name)))
@@ -52,6 +58,7 @@ namespace API
 
 			app.UseRouting();
 
+			app.UseAuthentication();
 			app.UseAuthorization();
 
 			app.UseEndpoints(endpoints => {
