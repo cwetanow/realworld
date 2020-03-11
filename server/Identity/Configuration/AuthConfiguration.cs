@@ -1,4 +1,4 @@
-﻿namespace Identity.Models
+﻿namespace Identity.Configuration
 {
 	public class AuthConfiguration
 	{

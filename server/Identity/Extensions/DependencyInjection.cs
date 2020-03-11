@@ -1,5 +1,6 @@
 ﻿using System;
 using Application.Common.Interfaces;
+using Identity.Configuration;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,10 +9,19 @@ namespace Identity.Extensions
 {
 	public static class DependencyInjection
 	{
-		public static IServiceCollection AddIdentity(this IServiceCollection services, Action<DbContextOptionsBuilder> optionsAction)
+		public static IServiceCollection AddIdentity(this IServiceCollection services,
+			Action<DbContextOptionsBuilder> optionsAction,
+			Action<AuthConfiguration> authConfigurationAction)
 		{
 			services
 				.AddDbContext<ApplicationIdentityDbContext>(optionsAction);
+
+			var configuration = new AuthConfiguration();
+			authConfigurationAction.Invoke(configuration);
+
+			services
+				.AddSingleton(configuration)
+				.AddSingleton<JwtTokenService>();
 
 			services
 				.AddIdentity<ApplicationUser, IdentityRole>()

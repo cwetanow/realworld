@@ -35,7 +35,8 @@ namespace API
 
 			services
 				.AddPersistence(options => options.UseNpgsql(Configuration.GetConnectionString(typeof(ConduitDbContext).Name)))
-				.AddIdentity(options => options.UseNpgsql(Configuration.GetConnectionString("IdentityDbContext")))
+				.AddIdentity(options => options.UseNpgsql(Configuration.GetConnectionString("IdentityDbContext")),
+					authConfiguration => Configuration.Bind("Auth", authConfiguration))
 				.AddApplication();
 		}
 

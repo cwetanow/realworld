@@ -3,25 +3,25 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Identity.Models;
+using Identity.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Identity
 {
-	public class TokenService
+	public class JwtTokenService
 	{
 		private readonly AuthConfiguration configuration;
 
-		public TokenService(AuthConfiguration configuration)
+		public JwtTokenService(AuthConfiguration configuration)
 		{
 			this.configuration = configuration;
 		}
 
-		public string CreateToken(string username, string userId, params KeyValuePair<string, string>[] additionalClaims)
+		public string CreateToken(string email, params KeyValuePair<string, string>[] additionalClaims)
 		{
 			var claims = new List<Claim> {
-				new Claim(JwtRegisteredClaimNames.Sub, username),
-				new Claim(JwtRegisteredClaimNames.Jti, userId)
+				new Claim(JwtRegisteredClaimNames.Sub, email),
+				new Claim(JwtRegisteredClaimNames.Jti, email)
 			};
 
 			foreach (var additionalClaim in additionalClaims)
