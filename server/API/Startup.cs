@@ -1,6 +1,9 @@
 using API.Infrastructure.Extensions;
+using API.Infrastructure.Services;
 using Application.Common.Extensions;
+using Application.Common.Interfaces;
 using Identity.Extensions;
+using Identity.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -41,9 +44,12 @@ namespace API
 
 			services
 				.AddPersistence(options => options.UseNpgsql(Configuration.GetConnectionString(typeof(ConduitDbContext).Name)))
-				.AddIdentity(options => options.UseNpgsql(Configuration.GetConnectionString("IdentityDbContext")),
+				.AddIdentity<HttpContextCurrentUserService>(options => options.UseNpgsql(Configuration.GetConnectionString("IdentityDbContext")),
 					authConfiguration => Configuration.Bind("Auth", authConfiguration))
 				.AddApplication();
+
+			services
+				.AddHttpContextAccessor();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
