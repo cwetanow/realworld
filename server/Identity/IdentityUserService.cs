@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Application.Common.Interfaces;
 using Application.Common.Models;
 using Identity.Extensions;
@@ -23,6 +22,20 @@ namespace Identity
 			var result = await userManager.CreateAsync(user, password);
 
 			return (result.ToApplicationResult(), user.Id);
+		}
+
+		public async Task<Result> Authenticate(string email, string password)
+		{
+			var user = await userManager.FindByEmailAsync(email);
+
+			if (user == null)
+			{
+				return Result.CreateFailure();
+			}
+
+			return await userManager.CheckPasswordAsync(user, password) ?
+				Result.CreateSuccess() :
+				Result.CreateFailure();
 		}
 	}
 }

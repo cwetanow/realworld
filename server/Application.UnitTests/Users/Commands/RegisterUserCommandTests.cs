@@ -50,7 +50,7 @@ namespace Application.UnitTests.Users.Commands
 			// Arrange
 			var errors = new List<string> { "some error" };
 
-			var result = Result.CreateFailure(errors);
+			var result = Result.CreateFailure(errors.ToArray());
 
 			var command = new RegisterUserCommand {
 				Email = email,
