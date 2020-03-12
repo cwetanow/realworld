@@ -3,5 +3,7 @@
 	public interface ICurrentUserService
 	{
 		string Email { get; }
+
+		bool IsAuthenticated { get; }
 	}
 }

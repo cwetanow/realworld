@@ -1,6 +1,8 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Exceptions;
+using Application.Common.Interfaces;
 using Application.Profiles.Models;
 using AutoMapper;
 using Domain.Entities;
@@ -18,11 +20,13 @@ namespace Application.Profiles.Queries
 		{
 			private readonly DbContext context;
 			private readonly IMapper mapper;
+			private readonly ICurrentUserService currentUser;
 
-			public Handler(DbContext context, IMapper mapper)
+			public Handler(DbContext context, IMapper mapper, ICurrentUserService currentUser)
 			{
 				this.context = context;
 				this.mapper = mapper;
+				this.currentUser = currentUser;
 			}
 
 			public async Task<ProfileDto> Handle(ProfileByUsernameQuery request, CancellationToken cancellationToken)
@@ -36,7 +40,15 @@ namespace Application.Profiles.Queries
 					throw new EntityNotFoundException<UserProfile>(request.Username);
 				}
 
-				return mapper.Map<ProfileDto>(profile);
+				var dto = mapper.Map<ProfileDto>(profile);
+
+				if (currentUser.IsAuthenticated)
+				{
+					dto.Following = await context.Set<UserFollower>()
+						.AnyAsync(f => f.UserId == profile.Id && f.Follower.Email == currentUser.Email, cancellationToken);
+				}
+
+				return dto;
 			}
 		}
 

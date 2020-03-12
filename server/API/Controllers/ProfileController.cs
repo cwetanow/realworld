@@ -3,6 +3,7 @@ using Application.Profiles.Commands;
 using Application.Profiles.Models;
 using Application.Profiles.Queries;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -20,5 +21,9 @@ namespace API.Controllers
 
 			return await mediator.Send(new ProfileByUsernameQuery { Username = username });
 		}
+
+		[AllowAnonymous]
+		[HttpGet("{username}")]
+		public async Task<ProfileDto> GetProfile(string username) => await mediator.Send(new ProfileByUsernameQuery { Username = username });
 	}
 }

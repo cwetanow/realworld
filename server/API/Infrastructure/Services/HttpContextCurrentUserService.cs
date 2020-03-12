@@ -14,6 +14,7 @@ namespace API.Infrastructure.Services
 			this.httpContextAccessor = httpContextAccessor;
 		}
 
-		public string Email => httpContextAccessor.HttpContext.User.Claims.Single(c => c.Type.Equals(JwtRegisteredClaimNames.Sub)).Value;
+		public string Email => httpContextAccessor.HttpContext.User?.Claims?.SingleOrDefault(c => c.Type.Equals(JwtRegisteredClaimNames.Sub))?.Value;
+		public bool IsAuthenticated => httpContextAccessor.HttpContext.User?.Identity != null;
 	}
 }
