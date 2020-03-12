@@ -1,6 +1,7 @@
 ﻿using System;
 using Application.Common.Interfaces;
 using Identity.Configuration;
+using Identity.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,9 +10,10 @@ namespace Identity.Extensions
 {
 	public static class DependencyInjection
 	{
-		public static IServiceCollection AddIdentity(this IServiceCollection services,
+		public static IServiceCollection AddIdentity<TCurrentUserService>(this IServiceCollection services,
 			Action<DbContextOptionsBuilder> optionsAction,
 			Action<AuthConfiguration> authConfigurationAction)
+			where TCurrentUserService : class, ICurrentUserService
 		{
 			services
 				.AddDbContext<ApplicationIdentityDbContext>(optionsAction);
@@ -28,7 +30,8 @@ namespace Identity.Extensions
 				.AddEntityFrameworkStores<ApplicationIdentityDbContext>();
 
 			services
-				.AddScoped<IUserService, IdentityUserService>();
+				.AddScoped<IUserService, IdentityUserService>()
+				.AddScoped<ICurrentUserService, TCurrentUserService>();
 
 			return services;
 		}
