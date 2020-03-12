@@ -27,7 +27,7 @@ namespace Application.Profiles.Commands
 
 			public async Task<Unit> Handle(UnfollowUserCommand request, CancellationToken cancellationToken)
 			{
-				var currentUserEmail = this.currentUser.Email;
+				var currentUserEmail = currentUser.Email;
 
 				var currentUserId = await context.Set<UserProfile>()
 					.AsNoTracking()
