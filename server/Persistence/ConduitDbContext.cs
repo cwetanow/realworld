@@ -12,10 +12,10 @@ namespace Persistence
 		public ConduitDbContext(DbContextOptions<ConduitDbContext> options)
 			: base(options)
 		{
-
 		}
 
 		public DbSet<UserProfile> UserProfiles { get; set; }
+		public DbSet<UserFollower> UserFollowers { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
