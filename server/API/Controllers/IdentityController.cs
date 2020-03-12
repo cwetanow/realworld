@@ -10,22 +10,23 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-	public class UsersController : BaseController
+
+	[Route("api/users")]
+	[AllowAnonymous]
+	public class IdentityController : BaseController
 	{
 		private readonly JwtTokenService tokenService;
 
-		public UsersController(IMediator mediator, JwtTokenService tokenService)
+		public IdentityController(IMediator mediator, JwtTokenService tokenService)
 			: base(mediator)
 		{
 			this.tokenService = tokenService;
 		}
 
 		[HttpPost]
-		[AllowAnonymous]
 		public async Task<UserWithProfileDto> RegisterUser([FromBody] UserRequest<RegisterUserCommand> request) => await ExecuteCommandAndReturnUserWithToken(request.User);
 
 		[HttpPost("login")]
-		[AllowAnonymous]
 		public async Task<UserWithProfileDto> AuthenticateUser([FromBody] UserRequest<AuthenticateUserCommand> request) => await ExecuteCommandAndReturnUserWithToken(request.User);
 
 		private async Task<UserWithProfileDto> ExecuteCommandAndReturnUserWithToken<TCommand>(TCommand command)
