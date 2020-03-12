@@ -3,7 +3,6 @@ using API.Infrastructure.Services;
 using Application.Common.Extensions;
 using Application.Common.Interfaces;
 using Identity.Extensions;
-using Identity.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;

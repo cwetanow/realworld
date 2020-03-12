@@ -7,9 +7,9 @@ namespace Application.Common.Exceptions
 	{
 		public IEnumerable<string> Errors { get; }
 
-		public BadRequestException(IEnumerable<string> errors = null)
+		public BadRequestException(params string[] errors)
 		{
-			Errors = errors ?? new List<string>();
+			Errors = errors;
 		}
 	}
 }
