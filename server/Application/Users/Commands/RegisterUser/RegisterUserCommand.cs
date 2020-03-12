@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Exceptions;
 using Application.Common.Interfaces;
@@ -35,7 +36,7 @@ namespace Application.Users.Commands.RegisterUser
 
 				if (!result.Success)
 				{
-					throw new BadRequestException(result.Errors);
+					throw new BadRequestException(result.Errors.ToArray());
 				}
 
 				var userProfile = new UserProfile(userId, request.Email, request.Username);
