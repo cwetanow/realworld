@@ -4,6 +4,8 @@ namespace Domain.Entities
 {
 	public class UserProfile : Entity
 	{
+		private UserProfile() { }
+
 		public UserProfile(string userId, string email, string username)
 		{
 			UserId = userId;
@@ -11,12 +13,15 @@ namespace Domain.Entities
 			Username = username;
 		}
 
-		public string UserId { get; set; }
+		public string UserId { get; }
 
-		public string Email { get; set; }
-		public string Username { get; set; }
+		public string Email { get; }
+		public string Username { get; }
 
-		public string Bio { get; }
-		public string Image { get; }
+		public void UpdateBio(string bio) => Bio = bio;
+		public void UpdateImage(string newImage) => Image = newImage;
+
+		public string Bio { get; private set; }
+		public string Image { get; private set; }
 	}
 }
