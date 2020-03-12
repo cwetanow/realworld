@@ -1,7 +1,6 @@
 ﻿using System;
 using Application.Common.Interfaces;
 using Identity.Configuration;
-using Identity.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

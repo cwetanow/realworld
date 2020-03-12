@@ -1,6 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using Identity.Interfaces;
+using Application.Common.Interfaces;
 using Microsoft.AspNetCore.Http;
 
 namespace API.Infrastructure.Services
