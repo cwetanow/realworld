@@ -10,6 +10,12 @@
 			FollowerId = followerId;
 		}
 
+		public UserFollower(UserProfile user, UserProfile follower)
+		{
+			User = user;
+			Follower = follower;
+		}
+
 		public int UserId { get; set; }
 		public UserProfile User { get; set; }
 

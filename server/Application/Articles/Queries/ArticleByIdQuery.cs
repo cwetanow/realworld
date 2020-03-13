@@ -42,7 +42,6 @@ namespace Application.Articles.Queries
 					throw new EntityNotFoundException<Article>(request.Id);
 				}
 
-
 				if (currentUser.IsAuthenticated)
 				{
 					article.Author.Following = await context.Set<UserFollower>()
