@@ -4,6 +4,7 @@ using Application.Articles.Commands;
 using Application.Articles.Models;
 using Application.Articles.Queries;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -21,5 +22,9 @@ namespace API.Controllers
 
 			return await mediator.Send(new ArticleByIdQuery { Id = id });
 		}
+
+		[HttpGet]
+		[AllowAnonymous]
+		public async Task<ArticleListDto> ListArticles([FromQuery] ListArticlesQuery query) => await mediator.Send(query);
 	}
 }
