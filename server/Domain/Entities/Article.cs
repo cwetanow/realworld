@@ -31,7 +31,7 @@ namespace Domain.Entities
 		public DateTime CreatedAt { get; private set; }
 		public DateTime UpdatedAt { get; private set; }
 
-		public ICollection<ArticleTag> Tags { get; private set; }
+		public ICollection<ArticleTag> Tags { get; private set; } = new List<ArticleTag>();
 
 		public int AuthorId { get; private set; }
 		public UserProfile Author { get; private set; }
