@@ -16,6 +16,9 @@ namespace Persistence
 
 		public DbSet<UserProfile> UserProfiles { get; set; }
 		public DbSet<UserFollower> UserFollowers { get; set; }
+		public DbSet<Article> Articles { get; set; }
+		public DbSet<ArticleTag> ArticleTags { get; set; }
+		public DbSet<Tag> Tags { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
