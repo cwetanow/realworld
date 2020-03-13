@@ -50,12 +50,6 @@ namespace Application.Articles.Queries
 						.And(a => a.Tags.Any(t => t.Tag.Value == request.Tag));
 				}
 
-				//if (!string.IsNullOrEmpty(request.Favorited))
-				//{
-				//	whereExpression = whereExpression
-				//		.And(a => a.Author.Username == request.Author);
-				//}
-
 				var articles = await context.Set<Article>()
 					.Where(whereExpression)
 					.ProjectTo<ArticleDto>(mapper.ConfigurationProvider)
