@@ -31,13 +31,8 @@ namespace Application.Articles.Queries
 
             public async Task<ArticleListDto> Handle(FeedArticlesQuery request, CancellationToken cancellationToken)
             {
-                var followedUsers = await context.Set<UserFollower>()
-                    .Where(f => f.Follower.Email == currentUser.Email)
-                    .Select(f => f.UserId)
-                    .ToListAsync(cancellationToken);
-
                 var articles = await context.Set<Article>()
-                    .Where(a => followedUsers.Contains(a.AuthorId))
+                    .Where(a => a.Author.Followers.Any(f => f.Follower.Email == currentUser.Email))
                     .OrderByDescending(a => a.UpdatedAt)
                     .Skip(request.Offset)
                     .Take(request.Limit)
