@@ -45,20 +45,7 @@ namespace Application.Articles.Commands
                     throw new EntityNotFoundException<Article>(request.Slug);
                 }
 
-                if (!string.IsNullOrEmpty(request.Title))
-                {
-                    article.UpdateTitle(request.Title);
-                }
-
-                if (!string.IsNullOrEmpty(request.Description))
-                {
-                    article.UpdateDescription(request.Description);
-                }
-
-                if (!string.IsNullOrEmpty(request.Body))
-                {
-                    article.UpdateBody(request.Body);
-                }
+                article.Update(request.Title, request.Description, request.Body);
 
                 context.Update(article);
                 await context.SaveChangesAsync(cancellationToken);

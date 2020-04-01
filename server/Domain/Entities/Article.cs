@@ -39,35 +39,23 @@ namespace Domain.Entities
         public int AuthorId { get; private set; }
         public UserProfile Author { get; private set; }
 
-        public void UpdateTitle(string newTitle)
+        public void Update(string newTitle, string newDescription, string newBody)
         {
-            if (string.IsNullOrEmpty(newTitle))
+            if (!string.IsNullOrEmpty(newTitle) && newTitle != this.Title)
             {
-                throw new ArgumentNullException(nameof(newTitle));
+                this.Title = newTitle;
+                this.SetSlug();
             }
 
-            this.Title = newTitle;
-            this.SetSlug();
-        }
-
-        public void UpdateDescription(string newDescription)
-        {
-            if (string.IsNullOrEmpty(newDescription))
+            if (!string.IsNullOrEmpty(newDescription) && newDescription != this.Description)
             {
-                throw new ArgumentNullException(nameof(newDescription));
+                this.Description = newDescription;
             }
 
-            this.Description = newDescription;
-        }
-
-        public void UpdateBody(string newBody)
-        {
-            if (string.IsNullOrEmpty(newBody))
+            if (!string.IsNullOrEmpty(newBody) && newBody != this.Body)
             {
-                throw new ArgumentNullException(nameof(newBody));
+                this.Body = newBody;
             }
-
-            this.Body = newBody;
         }
 
         private void SetSlug() => Slug = string.Join('-', Title.ToLower().Split(' '));
