@@ -33,5 +33,16 @@ namespace API.Controllers
 		[HttpGet("{slug}")]
 		[AllowAnonymous]
 		public async Task<ArticleDto> GetArticle(string slug) => await mediator.Send(new ArticleBySlugQuery { Slug = slug });
+
+		[HttpPut("{slug}")]
+		public async Task<ArticleDto> UpdateArticle(string slug, ArticleRequest<UpdateArticleCommand> request)
+		{
+			var command = request.Article;
+			command.Slug = slug;
+			
+			await mediator.Send(command);
+			
+			return await mediator.Send(new ArticleBySlugQuery {Slug = slug});
+		}
 	}
 }
