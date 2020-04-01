@@ -35,14 +35,14 @@ namespace Application.Articles.Commands
                     .Include(a => a.Author)
                     .SingleOrDefaultAsync(a => a.Slug == request.Slug, cancellationToken: cancellationToken);
 
-                if (article.Author.Email != currentUser.Email)
-                {
-                    throw new BadRequestException("User must be author to edit article");
-                }
-
                 if (article == null)
                 {
                     throw new EntityNotFoundException<Article>(request.Slug);
+                }
+
+                if (article.Author.Email != currentUser.Email)
+                {
+                    throw new BadRequestException("User must be author to edit article");
                 }
 
                 article.Update(request.Title, request.Description, request.Body);
