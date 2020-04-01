@@ -27,6 +27,9 @@ namespace API.Controllers
 		[AllowAnonymous]
 		public async Task<ArticleListDto> ListArticles([FromQuery] ListArticlesQuery query) => await mediator.Send(query);
 
+		[HttpGet("feed")]
+		public async Task<ArticleListDto> FeedArticles([FromQuery] FeedArticlesQuery query) => await mediator.Send(query);
+
 		[HttpGet("{slug}")]
 		[AllowAnonymous]
 		public async Task<ArticleDto> GetArticle(string slug) => await mediator.Send(new ArticleBySlugQuery { Slug = slug });
