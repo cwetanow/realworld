@@ -74,9 +74,9 @@ namespace Identity
 				var handler = new JwtSecurityTokenHandler();
 
 				handler.ValidateToken(token, tokenValidationParameters, out _);
-				var secutiryToken = handler.ReadJwtToken(token);
+				var securityToken = handler.ReadJwtToken(token);
 
-				var identity = new ClaimsIdentity(secutiryToken.Claims, scheme);
+				var identity = new ClaimsIdentity(securityToken.Claims, scheme);
 				var principal = new ClaimsPrincipal(identity);
 				var ticket = new AuthenticationTicket(principal, scheme);
 
