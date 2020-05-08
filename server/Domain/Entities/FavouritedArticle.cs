@@ -9,6 +9,12 @@ namespace Domain.Entities
         {
         }
 
+        public FavouritedArticle(Article article, UserProfile user)
+        {
+            Article = article;
+            User = user;
+        }
+
         public FavouritedArticle(int articleId, int userId)
         {
             ArticleId = articleId;
