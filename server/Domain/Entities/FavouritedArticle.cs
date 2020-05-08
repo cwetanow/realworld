@@ -1,8 +1,9 @@
+using System.Collections.Generic;
 using Domain.Common;
 
 namespace Domain.Entities
 {
-    public class FavouritedArticle : Entity
+    public class FavouritedArticle : ValueObject
     {
         private FavouritedArticle()
         {
@@ -19,5 +20,11 @@ namespace Domain.Entities
 
         public int UserId { get; }
         public UserProfile User { get; }
+
+        protected override IEnumerable<object> GetAtomicValues()
+        {
+            yield return ArticleId;
+            yield return UserId;
+        }
     }
 }

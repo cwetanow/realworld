@@ -29,5 +29,7 @@ namespace Domain.Entities
 
         public ICollection<UserFollower> Followers { get; } = new List<UserFollower>();
         public ICollection<UserFollower> FollowedUsers { get; } = new List<UserFollower>();
+
+        public ICollection<FavouritedArticle> FavouriteArticles { get; } = new List<FavouritedArticle>();
     }
 }
