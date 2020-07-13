@@ -1,10 +1,11 @@
-﻿using Application.Common.Mappings;
+using Application.Common.Mappings;
 using Domain.Entities;
 
 namespace Application.Users.Models
 {
 	public class UserWithProfileDto : IMapFrom<UserProfile>
 	{
+		public int Id { get; set; }
 		public string Email { get; set; }
 		public string Username { get; set; }
 		public string Token { get; set; }

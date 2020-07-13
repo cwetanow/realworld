@@ -34,7 +34,7 @@ namespace API.Controllers
 		{
 			var dto = await mediator.Send(command);
 
-			dto.Token = tokenService.CreateToken(dto.Email);
+			dto.Token = tokenService.CreateToken(dto.Email, dto.Id);
 
 			return dto;
 		}
