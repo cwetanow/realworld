@@ -7,14 +7,20 @@ namespace API.Infrastructure.Services
 {
 	public class HttpContextCurrentUserService : ICurrentUserService
 	{
-		private readonly IHttpContextAccessor httpContextAccessor;
-
 		public HttpContextCurrentUserService(IHttpContextAccessor httpContextAccessor)
 		{
-			this.httpContextAccessor = httpContextAccessor;
+			this.IsAuthenticated = httpContextAccessor.HttpContext.User?.Identity != null;
+			this.Email = httpContextAccessor.HttpContext.User?.Claims?.SingleOrDefault(c => c.Type.Equals(JwtRegisteredClaimNames.Sub))?.Value;
+
+			if (int.TryParse(httpContextAccessor.HttpContext.User?.Claims?.SingleOrDefault(c => c.Type.Equals(JwtRegisteredClaimNames.Jti))?.Value, out var userId))
+			{
+				this.UserId = userId;
+			}
 		}
 
-		public string Email => httpContextAccessor.HttpContext.User?.Claims?.SingleOrDefault(c => c.Type.Equals(JwtRegisteredClaimNames.Sub))?.Value;
-		public bool IsAuthenticated => httpContextAccessor.HttpContext.User?.Identity != null;
+		public string Email { get; }
+		public int UserId { get; }
+
+		public bool IsAuthenticated { get; }
 	}
 }
