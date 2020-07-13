@@ -43,6 +43,7 @@ namespace Application.Articles.Commands
 
 				context.RemoveRange(article.Tags);
 				context.Remove(article);
+				await context.SaveChangesAsync(cancellationToken);
 
 				return Unit.Value;
 			}
