@@ -1,6 +1,6 @@
 # ![RealWorld Example App](logo.png)
 
-[![Build Status](https://travis-ci.com/cwetanow/realworld.svg?branch=master)](https://travis-ci.com/cwetanow/realworld)
+![.NET Core](https://github.com/cwetanow/realworld/workflows/.NET%20Core/badge.svg?branch=master)
 
 > ### [YOUR_FRAMEWORK] codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld](https://github.com/gothinkster/realworld) spec and API.
 
