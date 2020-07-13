@@ -48,6 +48,10 @@ namespace API.Controllers
 			return await mediator.Send(new ArticleBySlugQuery { Slug = slug });
 		}
 
+		[HttpDelete("{slug}")]
+		public Task Delete(string slug) =>
+			mediator.Send(new DeleteArticleCommand { Slug = slug });
+
 		[HttpPost("{slug}/favorite")]
 		public async Task<ArticleDto> FavouriteArticle(string slug)
 		{
@@ -58,8 +62,8 @@ namespace API.Controllers
 			return await mediator.Send(new ArticleBySlugQuery { Slug = slug });
 		}
 
-		[HttpDelete("{slug}")]
-		public Task Delete(string slug) =>
-			mediator.Send(new DeleteArticleCommand { Slug = slug });
+		[HttpDelete("{slug}/favorite")]
+		public Task UnfavouriteArticle(string slug) =>
+			mediator.Send(new UnfavoriteArticleCommand { Slug = slug });
 	}
 }
