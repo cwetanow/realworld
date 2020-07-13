@@ -1,9 +1,0 @@
-language: csharp
-mono: none
-dist: xenial
-dotnet: 3.1
-install:
-  - dotnet restore server/Conduit.sln
-script:
-  - dotnet build server/Conduit.sln
-  - dotnet test server/Application.UnitTests/Application.UnitTests.csproj
