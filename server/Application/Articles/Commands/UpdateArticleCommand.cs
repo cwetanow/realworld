@@ -32,7 +32,6 @@ namespace Application.Articles.Commands
             public async Task<Unit> Handle(UpdateArticleCommand request, CancellationToken cancellationToken)
             {
                 var article = await context.Set<Article>()
-                    .Include(a => a.Author)
                     .SingleOrDefaultAsync(a => a.Slug == request.Slug, cancellationToken: cancellationToken);
 
                 if (article == null)
@@ -40,7 +39,7 @@ namespace Application.Articles.Commands
                     throw new EntityNotFoundException<Article>(request.Slug);
                 }
 
-                if (article.Author.Email != currentUser.Email)
+                if (article.AuthorId != currentUser.UserId)
                 {
                     throw new BadRequestException("User must be author to edit article");
                 }
