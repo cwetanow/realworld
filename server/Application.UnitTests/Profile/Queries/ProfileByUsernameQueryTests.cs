@@ -97,11 +97,10 @@ namespace Application.UnitTests.Profile.Queries
 
 			var query = new ProfileByUsernameQuery { Username = username };
 
-			var currentUserServiceMock = new Mock<ICurrentUserService>();
-			currentUserServiceMock.Setup(s => s.IsAuthenticated).Returns(true);
-			currentUserServiceMock.Setup(s => s.Email).Returns(currentUserEmail);
+			var currentUser = Mock.Of<ICurrentUserService>(s => s.UserId == currentUserProfile.Id
+																&& s.IsAuthenticated == true);
 
-			var sut = new ProfileByUsernameQuery.Handler(context: Context, mapper: Mapper, currentUserServiceMock.Object);
+			var sut = new ProfileByUsernameQuery.Handler(context: Context, mapper: Mapper, currentUser);
 
 			// Act
 			var actualResult = await sut.Handle(query, CancellationToken.None);

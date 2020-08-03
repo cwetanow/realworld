@@ -27,11 +27,11 @@ namespace Application.Articles.Commands
 			public async Task<Unit> Handle(UnfavoriteArticleCommand request, CancellationToken cancellationToken)
 			{
 				var favourite = await context.Set<FavouritedArticle>()
-					.SingleOrDefaultAsync(a => a.Article.Slug == request.Slug && a.User.Email == currentUser.Email, cancellationToken);
+					.SingleOrDefaultAsync(a => a.Article.Slug == request.Slug && a.UserId == currentUser.UserId, cancellationToken);
 
 				if (favourite is null)
 				{
-					throw new EntityNotFoundException<FavouritedArticle>($"User { currentUser.Email } article {request.Slug}");
+					throw new EntityNotFoundException<FavouritedArticle>($"User { currentUser.UserId } article {request.Slug}");
 				}
 
 				context.Remove(favourite);

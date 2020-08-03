@@ -27,35 +27,24 @@ namespace Application.Profiles.Commands
 
 			public async Task<Unit> Handle(FollowUserCommand request, CancellationToken cancellationToken)
 			{
-				var currentUserEmail = this.currentUser.Email;
+				var user = await context.Set<UserProfile>()
+					.Include(c => c.FollowedUsers)
+					.SingleOrDefaultAsync(c => c.Id == this.currentUser.UserId, cancellationToken);
 
-				var currentUserId = await context.Set<UserProfile>()
-					.AsNoTracking()
-					.Where(up => up.Email == currentUserEmail)
-					.Select(u => u.Id)
-					.SingleOrDefaultAsync(cancellationToken);
+				var otherUser = await context.Set<UserProfile>()
+					.SingleOrDefaultAsync(up => up.Username == request.Username, cancellationToken);
 
-				var otherUserId = await context.Set<UserProfile>()
-					.AsNoTracking()
-					.Where(up => up.Username == request.Username)
-					.Select(u => u.Id)
-					.SingleOrDefaultAsync(cancellationToken);
-
-				if (otherUserId is default(int))
+				if (otherUser is null)
 				{
 					throw new EntityNotFoundException<UserProfile>(request.Username);
 				}
 
-				var isUserFollower = await context.Set<UserFollower>()
-					.AnyAsync(f => f.UserId == otherUserId && f.FollowerId == currentUserId, cancellationToken);
-
-				if (isUserFollower)
+				if (user.HasFollowed(otherUser))
 				{
 					throw new BadRequestException("Current user already follows the other user");
 				}
 
-				var newFollower = new UserFollower(otherUserId, currentUserId);
-				context.Set<UserFollower>().Add(newFollower);
+				user.Follow(otherUser);
 				await context.SaveChangesAsync(cancellationToken);
 
 				return Unit.Value;

@@ -118,12 +118,12 @@ namespace Application.UnitTests.Articles.Queries
 		public async Task TestHandle_WithAuthenticatedUser_ShouldSetAuthorFollowedCorrectly()
 		{
 			// Arrange
-			var currentUser = new UserProfile(Guid.NewGuid().ToString(), "currentUser", "currentUser");
+			var user = new UserProfile(Guid.NewGuid().ToString(), "currentUser", "currentUser");
 
 			var followedAuthor = new UserProfile(Guid.NewGuid().ToString(), "email", "username");
 			var notFollowedAuthor = new UserProfile(Guid.NewGuid().ToString(), "otherAuthorEmail", "otherAuthorUsername");
 
-			Context.UserFollowers.Add(new UserFollower(followedAuthor, currentUser));
+			Context.UserFollowers.Add(new UserFollower(followedAuthor, user));
 
 			var articles = new List<Article>
 			{
@@ -136,11 +136,10 @@ namespace Application.UnitTests.Articles.Queries
 
 			var query = new ListArticlesQuery();
 
-			var currentUserMock = new Mock<ICurrentUserService>();
-			currentUserMock.Setup(s => s.IsAuthenticated).Returns(true);
-			currentUserMock.Setup(s => s.Email).Returns(currentUser.Email);
+			var currentUser = Mock.Of<ICurrentUserService>(s => s.UserId == user.Id
+			                                                    && s.IsAuthenticated == true);
 
-			var sut = new ListArticlesQuery.Handler(Context, Mapper, currentUserMock.Object);
+			var sut = new ListArticlesQuery.Handler(Context, Mapper, currentUser);
 
 			// Act
 			var result = await sut.Handle(query, CancellationToken.None);

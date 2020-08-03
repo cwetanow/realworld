@@ -21,8 +21,7 @@ namespace Application.UnitTests.Articles.Commands
 		public async Task TestHandle_WithoutTags_ShouldCreateEntityWithCorrectProperties(string title, string description, string body)
 		{
 			// Arrange
-			var userEmail = "email";
-			var author = new UserProfile(Guid.NewGuid().ToString(), userEmail, "username");
+			var author = new UserProfile(Guid.NewGuid().ToString(), "email", "username");
 
 			Context.UserProfiles.Add(author);
 			await Context.SaveChangesAsync();
@@ -33,10 +32,9 @@ namespace Application.UnitTests.Articles.Commands
 				Body = body
 			};
 
-			var currentUserMock = new Mock<ICurrentUserService>();
-			currentUserMock.Setup(s => s.Email).Returns(userEmail);
+			var currentUser = Mock.Of<ICurrentUserService>(s => s.UserId == author.Id); 
 
-			var sut = new CreateArticleCommand.Handler(currentUserMock.Object, Context);
+			var sut = new CreateArticleCommand.Handler(currentUser, Context);
 
 			// Act
 			await sut.Handle(command, CancellationToken.None);
@@ -63,8 +61,7 @@ namespace Application.UnitTests.Articles.Commands
 			var existingTag = new Tag("existingTag");
 			var newTagValue = "newTagValue";
 
-			var userEmail = "email";
-			var author = new UserProfile(Guid.NewGuid().ToString(), userEmail, "username");
+			var author = new UserProfile(Guid.NewGuid().ToString(), "email", "username");
 
 			Context.UserProfiles.Add(author);
 			Context.Tags.Add(existingTag);
@@ -83,10 +80,9 @@ namespace Application.UnitTests.Articles.Commands
 				existingTag
 			};
 
-			var currentUserMock = new Mock<ICurrentUserService>();
-			currentUserMock.Setup(s => s.Email).Returns(userEmail);
+			var currentUser = Mock.Of<ICurrentUserService>(s => s.UserId == author.Id); 
 
-			var sut = new CreateArticleCommand.Handler(currentUserMock.Object, Context);
+			var sut = new CreateArticleCommand.Handler(currentUser, Context);
 
 			// Act
 			await sut.Handle(command, CancellationToken.None);

@@ -27,34 +27,25 @@ namespace Application.Profiles.Commands
 
 			public async Task<Unit> Handle(UnfollowUserCommand request, CancellationToken cancellationToken)
 			{
-				var currentUserEmail = currentUser.Email;
+				var user = await context.Set<UserProfile>()
+					.Include(c => c.FollowedUsers)
+					.SingleOrDefaultAsync(c => c.Id == this.currentUser.UserId, cancellationToken);
 
-				var currentUserId = await context.Set<UserProfile>()
-					.AsNoTracking()
-					.Where(up => up.Email == currentUserEmail)
-					.Select(u => u.Id)
-					.SingleAsync(cancellationToken);
+				var otherUser = await context.Set<UserProfile>()
+					.SingleOrDefaultAsync(up => up.Username == request.Username, cancellationToken);
 
-				var otherUserId = await context.Set<UserProfile>()
-					.AsNoTracking()
-					.Where(up => up.Username == request.Username)
-					.Select(u => u.Id)
-					.SingleOrDefaultAsync(cancellationToken);
-
-				if (otherUserId is default(int))
+				if (otherUser is null)
 				{
 					throw new EntityNotFoundException<UserProfile>(request.Username);
 				}
 
-				var following = await context.Set<UserFollower>()
-					.SingleOrDefaultAsync(f => f.UserId == otherUserId && f.FollowerId == currentUserId, cancellationToken);
-
-				if (following == null)
+				if (!user.HasFollowed(otherUser))
 				{
-					throw new EntityNotFoundException<UserFollower>(new { UserId = otherUserId, FollowerId = currentUserId });
+					throw new EntityNotFoundException<UserFollower>(new { UserId = otherUser.Id, FollowerId = user.Id });
 				}
 
-				context.Remove(following);
+				user.Unfollow(otherUser);
+
 				await context.SaveChangesAsync(cancellationToken);
 
 				return Unit.Value;

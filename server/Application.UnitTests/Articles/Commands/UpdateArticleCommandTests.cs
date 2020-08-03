@@ -70,15 +70,14 @@ namespace Application.UnitTests.Articles.Commands
             string newBody)
         {
             // Arrange
-            var currentUser = new UserProfile(Guid.NewGuid().ToString(), "email", "username");
+            var user = new UserProfile(Guid.NewGuid().ToString(), "email", "username");
 
-            var article = new Article(slug, null, null, new DateTime(), currentUser);
+            var article = new Article(slug, null, null, new DateTime(), user);
 
             Context.Articles.Add(article);
             await Context.SaveChangesAsync();
 
-            var currentUserMock = new Mock<ICurrentUserService>();
-            currentUserMock.Setup(s => s.Email).Returns(currentUser.Email);
+            var currentUser = Mock.Of<ICurrentUserService>(s => s.UserId == user.Id);
 
             var command = new UpdateArticleCommand
             {
@@ -88,7 +87,7 @@ namespace Application.UnitTests.Articles.Commands
                 Description = newDescription
             };
 
-            var sut = new UpdateArticleCommand.Handler(Context, currentUserMock.Object);
+            var sut = new UpdateArticleCommand.Handler(Context, currentUser);
 
             // Act
             await sut.Handle(command, CancellationToken.None);

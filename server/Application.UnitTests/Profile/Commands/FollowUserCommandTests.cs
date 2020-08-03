@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Exceptions;
@@ -23,10 +23,9 @@ namespace Application.UnitTests.Profile.Commands
 			// Arrange
 			var command = new FollowUserCommand { Username = username };
 
-			var currentUserServiceMock = new Mock<ICurrentUserService>();
-			currentUserServiceMock.Setup(s => s.Email).Returns(currentUserEmail);
+			var currentUser = Mock.Of<ICurrentUserService>();
 
-			var sut = new FollowUserCommand.Handler(currentUserServiceMock.Object, Context);
+			var sut = new FollowUserCommand.Handler(currentUser, Context);
 
 			// Act
 			var act = new Func<Task<Unit>>(async () => await sut.Handle(command, CancellationToken.None));
@@ -52,10 +51,9 @@ namespace Application.UnitTests.Profile.Commands
 
 			var command = new FollowUserCommand { Username = username };
 
-			var currentUserServiceMock = new Mock<ICurrentUserService>();
-			currentUserServiceMock.Setup(s => s.Email).Returns(currentUserEmail);
+			var currentUser = Mock.Of<ICurrentUserService>(s => s.UserId == currentUserProfile.Id);
 
-			var sut = new FollowUserCommand.Handler(currentUserServiceMock.Object, Context);
+			var sut = new FollowUserCommand.Handler(currentUser, Context);
 
 			// Act
 			var act = new Func<Task<Unit>>(async () => await sut.Handle(command, CancellationToken.None));
@@ -78,10 +76,9 @@ namespace Application.UnitTests.Profile.Commands
 
 			var command = new FollowUserCommand { Username = username };
 
-			var currentUserServiceMock = new Mock<ICurrentUserService>();
-			currentUserServiceMock.Setup(s => s.Email).Returns(currentUserEmail);
+			var currentUser = Mock.Of<ICurrentUserService>(s => s.UserId == currentUserProfile.Id);
 
-			var sut = new FollowUserCommand.Handler(currentUserServiceMock.Object, Context);
+			var sut = new FollowUserCommand.Handler(currentUser, Context);
 
 			// Act
 			await sut.Handle(command, CancellationToken.None);

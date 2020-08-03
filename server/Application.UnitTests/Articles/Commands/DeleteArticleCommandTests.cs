@@ -22,11 +22,11 @@ namespace Application.UnitTests.Articles.Commands
 		public async Task GivenSlugOfNonExistingArticle_ThrowsEntityNotFoundException()
 		{
 			// Arrange
-			var currentUserMock = new Mock<ICurrentUserService>();
+			var currentUser = Mock.Of<ICurrentUserService>();
 
 			var command = new DeleteArticleCommand { Slug = "some slug" };
 
-			var sut = new DeleteArticleCommand.Handler(Context, currentUserMock.Object);
+			var sut = new DeleteArticleCommand.Handler(Context, currentUser);
 
 			// Act
 			var action = new Func<Task<Unit>>(() => sut.Handle(command, CancellationToken.None));
@@ -45,12 +45,11 @@ namespace Application.UnitTests.Articles.Commands
 			Context.Articles.Add(article);
 			await Context.SaveChangesAsync();
 
-			var currentUserMock = new Mock<ICurrentUserService>();
-			currentUserMock.Setup(c => c.Email).Returns(Guid.NewGuid().ToString);
+			var currentUser = Mock.Of<ICurrentUserService>();
 
 			var command = new DeleteArticleCommand { Slug = article.Slug };
 
-			var sut = new DeleteArticleCommand.Handler(Context, currentUserMock.Object);
+			var sut = new DeleteArticleCommand.Handler(Context, currentUser);
 
 			// Act
 			var action = new Func<Task<Unit>>(() => sut.Handle(command, CancellationToken.None));
@@ -71,12 +70,11 @@ namespace Application.UnitTests.Articles.Commands
 			Context.Articles.Add(article);
 			await Context.SaveChangesAsync();
 
-			var currentUserMock = new Mock<ICurrentUserService>();
-			currentUserMock.Setup(c => c.Email).Returns(user.Email);
+			var currentUser = Mock.Of<ICurrentUserService>(s => s.UserId == user.Id);
 
 			var command = new DeleteArticleCommand { Slug = article.Slug };
 
-			var sut = new DeleteArticleCommand.Handler(Context, currentUserMock.Object);
+			var sut = new DeleteArticleCommand.Handler(Context, currentUser);
 
 			// Act
 			await sut.Handle(command, CancellationToken.None);

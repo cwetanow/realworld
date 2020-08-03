@@ -18,11 +18,11 @@ namespace Identity
 			this.configuration = configuration;
 		}
 
-		public string CreateToken(string email, params KeyValuePair<string, string>[] additionalClaims)
+		public string CreateToken(string email, int userId, params KeyValuePair<string, string>[] additionalClaims)
 		{
 			var claims = new List<Claim> {
 				new Claim(JwtRegisteredClaimNames.Sub, email),
-				new Claim(JwtRegisteredClaimNames.Jti, email)
+				new Claim(JwtRegisteredClaimNames.Jti, userId.ToString())
 			};
 
 			foreach (var additionalClaim in additionalClaims)
