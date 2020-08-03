@@ -33,7 +33,7 @@ namespace Application.Articles.Commands
 			public async Task<int> Handle(CreateArticleCommand request, CancellationToken cancellationToken)
 			{
 				var author = await context.Set<UserProfile>()
-					.SingleAsync(p => p.Email == currentUser.Email, cancellationToken);
+					.SingleAsync(p => p.Id == currentUser.UserId, cancellationToken);
 
 				var tags = new List<Tag>();
 
