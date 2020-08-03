@@ -39,20 +39,18 @@ namespace Application.UnitTests.Articles.Commands
 		{
 			// Arrange
 			var user = new UserProfile(Guid.NewGuid().ToString(), "email@email.com", "username");
-
 			var article = new Article("test title", "test", "test", new DateTime(1111, 1, 1), user);
 
-			var favouritedArticle = new FavouritedArticle(article, user);
+			user.FavouriteArticle(article);
 
-			Context.Add(favouritedArticle);
+			Context.Add(user);
 			await Context.SaveChangesAsync();
 
-			var currentUserMock = new Mock<ICurrentUserService>();
-			currentUserMock.Setup(c => c.Email).Returns(user.Email);
+			var currentUser = Mock.Of<ICurrentUserService>(s => s.UserId == user.Id);
 
 			var command = new UnfavoriteArticleCommand { Slug = article.Slug };
 
-			var sut = new UnfavoriteArticleCommand.Handler(Context, currentUserMock.Object);
+			var sut = new UnfavoriteArticleCommand.Handler(Context, currentUser);
 
 			// Act
 			await sut.Handle(command, CancellationToken.None);
