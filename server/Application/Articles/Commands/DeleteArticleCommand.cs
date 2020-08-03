@@ -36,7 +36,7 @@ namespace Application.Articles.Commands
 					throw new EntityNotFoundException<Article>(request.Slug);
 				}
 
-				if (article.Author.Email != this.currentUser.Email)
+				if (article.AuthorId != currentUser.UserId)
 				{
 					throw new BadRequestException("Only author can delete article");
 				}
