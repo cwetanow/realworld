@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Domain.Common;
 
 namespace Domain.Entities
@@ -31,5 +32,12 @@ namespace Domain.Entities
         public ICollection<UserFollower> FollowedUsers { get; } = new List<UserFollower>();
 
         public ICollection<FavouritedArticle> FavouriteArticles { get; } = new List<FavouritedArticle>();
+
+        public bool HasFavouritedArticle(Article article) => FavouriteArticles.Any(fa => fa.ArticleId == article.Id);
+
+        public void FavouriteArticle(Article article)
+        {
+            FavouriteArticles.Add(new FavouritedArticle(article, this));
+        }
     }
 }
