@@ -61,7 +61,7 @@ namespace Application.Articles.Queries
 				if (currentUser.IsAuthenticated)
 				{
 					var currentUserFollowedAuthors = context.Set<UserFollower>()
-						.Where(f => f.Follower.Email == currentUser.Email)
+						.Where(f => f.FollowerId == currentUser.UserId)
 						.Select(f => f.User.Username)
 						.Distinct()
 						.ToHashSet();

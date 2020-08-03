@@ -28,10 +28,9 @@ namespace Application.UnitTests.Profile.Commands
 
 			var command = new UnfollowUserCommand { Username = username };
 
-			var currentUserServiceMock = new Mock<ICurrentUserService>();
-			currentUserServiceMock.Setup(s => s.Email).Returns(currentUserEmail);
+			var currentUser = Mock.Of<ICurrentUserService>(s => s.UserId == currentUserProfile.Id);
 
-			var sut = new UnfollowUserCommand.Handler(currentUserServiceMock.Object, Context);
+			var sut = new UnfollowUserCommand.Handler(currentUser, Context);
 
 			// Act
 			var act = new Func<Task<Unit>>(async () => await sut.Handle(command, CancellationToken.None));
@@ -54,10 +53,9 @@ namespace Application.UnitTests.Profile.Commands
 
 			var command = new UnfollowUserCommand { Username = username };
 
-			var currentUserServiceMock = new Mock<ICurrentUserService>();
-			currentUserServiceMock.Setup(s => s.Email).Returns(currentUserEmail);
+			var currentUser = Mock.Of<ICurrentUserService>(s => s.UserId == currentUserProfile.Id);
 
-			var sut = new UnfollowUserCommand.Handler(currentUserServiceMock.Object, Context);
+			var sut = new UnfollowUserCommand.Handler(currentUser, Context);
 
 			// Act
 			var act = new Func<Task<Unit>>(async () => await sut.Handle(command, CancellationToken.None));
@@ -85,10 +83,9 @@ namespace Application.UnitTests.Profile.Commands
 
 			var command = new UnfollowUserCommand { Username = username };
 
-			var currentUserServiceMock = new Mock<ICurrentUserService>();
-			currentUserServiceMock.Setup(s => s.Email).Returns(currentUserEmail);
+			var currentUser = Mock.Of<ICurrentUserService>(s => s.UserId == currentUserProfile.Id);
 
-			var sut = new UnfollowUserCommand.Handler(currentUserServiceMock.Object, Context);
+			var sut = new UnfollowUserCommand.Handler(currentUser, Context);
 
 			// Act
 			await sut.Handle(command, CancellationToken.None);

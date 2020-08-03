@@ -45,7 +45,7 @@ namespace Application.Profiles.Queries
 				if (currentUser.IsAuthenticated)
 				{
 					dto.Following = await context.Set<UserFollower>()
-						.AnyAsync(f => f.UserId == profile.Id && f.Follower.Email == currentUser.Email, cancellationToken);
+						.AnyAsync(f => f.UserId == profile.Id && f.FollowerId == currentUser.UserId, cancellationToken);
 				}
 
 				return dto;
