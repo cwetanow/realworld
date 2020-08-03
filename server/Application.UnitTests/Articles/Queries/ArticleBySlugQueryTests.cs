@@ -63,10 +63,10 @@ namespace Application.UnitTests.Articles.Queries
 		public async Task TestHandle_WithUserFollower_ShouldSetAuthorIsFollowingCorrectly(string slug)
 		{
 			// Arrange
-			var currentUser = new UserProfile(Guid.NewGuid().ToString(), "currentUserEmail", "currentUserUsername");
+			var user = new UserProfile(Guid.NewGuid().ToString(), "currentUserEmail", "currentUserUsername");
 			var author = new UserProfile(Guid.NewGuid().ToString(), "authorEmail", "authorUsername");
 
-			Context.UserFollowers.Add(new UserFollower(author, currentUser));
+			Context.UserFollowers.Add(new UserFollower(author, user));
 			await Context.SaveChangesAsync();
 
 			var article = new Article(slug, "description", "body", new DateTime(1, 2, 3), author);
@@ -78,11 +78,10 @@ namespace Application.UnitTests.Articles.Queries
 
 			var query = new ArticleBySlugQuery { Slug = slug };
 
-			var currentUserMock = new Mock<ICurrentUserService>();
-			currentUserMock.Setup(s => s.IsAuthenticated).Returns(true);
-			currentUserMock.Setup(s => s.Email).Returns(currentUser.Email);
+			var currentUser = Mock.Of<ICurrentUserService>(s => s.UserId == user.Id
+			                                                    && s.IsAuthenticated == true);
 
-			var sut = new ArticleBySlugQuery.Handler(Context, Mapper, currentUserMock.Object);
+			var sut = new ArticleBySlugQuery.Handler(Context, Mapper, currentUser);
 
 			// Act
 			var actualResult = await sut.Handle(query, CancellationToken.None);

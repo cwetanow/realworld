@@ -46,7 +46,8 @@ namespace Application.Articles.Queries
 				if (currentUser.IsAuthenticated)
 				{
 					article.Author.Following = await context.Set<UserFollower>()
-						.AnyAsync(f => f.User.Username == article.Author.Username && f.Follower.Email == currentUser.Email, cancellationToken);
+						.AnyAsync(f => f.User.Username == article.Author.Username && 
+						               f.FollowerId == currentUser.UserId, cancellationToken);
 				}
 
 				return article;
